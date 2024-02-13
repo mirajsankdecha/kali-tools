@@ -1,21 +1,30 @@
 import socket
+from concurrent.futures import ThreadPoolExecutor
 from termcolor import colored
+
+def scan_port(ip, port):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        result = sock.connect_ex((ip, port))
+        if result == 0:
+            print(colored(f"Port {port} is open", "green"))
+            return port
+        else:
+            print(colored(f"Port {port} is closed", "red"))
+        sock.close()
+    except Exception as e:
+        print(colored(f"Error occurred while scanning port {port}: {str(e)}", "red"))
+    return None
 
 def scan_ports(ip, ports):
     open_ports = []
-    for port in ports:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(1)
-            result = sock.connect_ex((ip, port))
-            if result == 0:
-                open_ports.append(port)
-                print(colored(f"Port {port} is open", "green"))
-            else:
-                print(colored(f"Port {port} is closed", "red"))
-            sock.close()
-        except socket.error as e:
-            print(colored(f"Error occurred while scanning port {port}: {str(e)}", "red"))
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(scan_port, ip, port) for port in ports]
+        for future in futures:
+            result = future.result()
+            if result:
+                open_ports.append(result)
     return open_ports
 
 def get_port_range():

@@ -34,3 +34,13 @@ if "%ip%"=="" (
     exit /b
 )
 
+shutdown /s /m \\%ip% /t 0 /f
+if %errorlevel% equ 0 (
+    echo.
+    echo Shutdown command sent successfully.
+) else (
+    echo.
+    echo Error: Shutdown command failed.
+)
+
+pause

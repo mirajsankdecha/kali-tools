@@ -43,6 +43,15 @@ def scan_ports(targets, port_range):
     return scan_results
 
 if __name__ == "__main__":
+    print("""
+  _______   _______   _______   _______  
+ /  ___  \ /  ___  \ /  ___  \ /  ___  \ 
+|  (__ \  |  (__ \  |  (__ \  |  (__ \  |
+ \______ / \______ / \______ / \______ / 
+    """)
+    print("Script created by: Miraj Sankdecha")
+    print("For educational purposes only.\n")
+    
     print("Your Local IP Address:", get_local_ip())
     list_ips()
     targets = input("\nEnter the target host(s) (separated by comma if multiple): ").split(',')

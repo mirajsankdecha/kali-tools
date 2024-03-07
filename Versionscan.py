@@ -32,11 +32,3 @@ def scan_ports(targets, port_range):
 
     return scan_results
 
-if __name__ == "__main__":
-    list_ips()
-    targets = input("\nEnter the target host(s) (separated by comma if multiple): ").split(',')
-    port_range = input("Enter the range of ports to scan (e.g., '1-1000'): ")
-    scan_results = scan_ports(targets, port_range)
-    
-    headers = ["Host", "Protocol", "Port", "State", "Service", "Version"]
-    print(tabulate(scan_results, headers=headers, tablefmt="grid"))

@@ -1,7 +1,17 @@
 import nmap
 import subprocess
+import socket
 from termcolor import colored
 from tabulate import tabulate
+
+def get_local_ip():
+    try:
+        host_name = socket.gethostname()
+        local_ip = socket.gethostbyname(host_name)
+        return local_ip
+    except Exception as e:
+        print("Error occurred while fetching local IP address:", e)
+        return None
 
 def list_ips():
     try:
@@ -33,6 +43,7 @@ def scan_ports(targets, port_range):
     return scan_results
 
 if __name__ == "__main__":
+    print("Your Local IP Address:", get_local_ip())
     list_ips()
     targets = input("\nEnter the target host(s) (separated by comma if multiple): ").split(',')
     port_range = input("Enter the range of ports to scan (e.g., '1-1000'): ")

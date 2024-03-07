@@ -1,6 +1,7 @@
 import nmap
 import subprocess
 from termcolor import colored
+from tabulate import tabulate
 
 def list_ips():
     try:
@@ -15,23 +16,27 @@ def list_ips():
         print("Error occurred while listing IP addresses:", e)
 
 def scan_ports(targets, port_range):
+    scan_results = []
     scanner = nmap.PortScanner()
     arguments = f'-sV -p {port_range}'
     scanner.scan(hosts=targets, arguments=arguments)
 
     for host in scanner.all_hosts():
-        print(f"Host: {host}")
         for proto in scanner[host].all_protocols():
-            print(f"Protocol: {proto}")
             ports = scanner[host][proto].keys()
             for port in ports:
                 service = scanner[host][proto][port]
                 port_status = colored(service['state'], 'green' if service['state'] == 'open' else 'red')
                 service_name = colored(service['name'], 'cyan')
-                print(f"Port: {port}\tState: {port_status}\tService: {service_name}\tVersion: {service.get('version', '')}")
+                scan_results.append([host, proto, port, port_status, service_name, service.get('version', '')])
+
+    return scan_results
 
 if __name__ == "__main__":
     list_ips()
     targets = input("\nEnter the target host(s) (separated by comma if multiple): ").split(',')
     port_range = input("Enter the range of ports to scan (e.g., '1-1000'): ")
-    scan_ports(targets, port_range)
+    scan_results = scan_ports(targets, port_range)
+    
+    headers = ["Host", "Protocol", "Port", "State", "Service", "Version"]
+    print(tabulate(scan_results, headers=headers, tablefmt="grid"))

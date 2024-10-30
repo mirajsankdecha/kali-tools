@@ -64,7 +64,7 @@ def main():
         print("8) Crack Handshake with rockyou.txt")
         print("9) Crack Handshake with custom wordlist")
         print("10) Crack Handshake without wordlist")
-        print("11) Exit")
+        print("11) Exitt")
         
         choice = input("Select an option: ")
 
